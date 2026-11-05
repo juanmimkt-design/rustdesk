@@ -2492,7 +2492,25 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
+/// Lead-In Business: marca, servidor propio y modo cliente (solo recibir conexiones)
+fn leadin_apply() {
+    let tecnico = option_env!("LEADIN_VARIANT") == Some("tecnico");
+    *config::APP_NAME.write().unwrap() = if tecnico { "Lead-In Tecnico" } else { "Lead-In Soporte" }.to_owned();
+    {
+        let mut o = config::OVERWRITE_SETTINGS.write().unwrap();
+        o.insert("custom-rendezvous-server".to_owned(), "soporte.leadinbusiness.es".to_owned());
+        o.insert("relay-server".to_owned(), "soporte.leadinbusiness.es".to_owned());
+        o.insert("key".to_owned(), "DfrlU71Iw8KfXAbo11woJVTeVaQHFS31JX9Y14cpCfI=".to_owned());
+    }
+    if !tecnico {
+        let mut h = config::HARD_SETTINGS.write().unwrap();
+        h.insert("conn-type".to_owned(), "incoming".to_owned());
+        h.insert("disable-installation".to_owned(), "Y".to_owned());
+    }
+}
+
 pub fn load_custom_client() {
+    leadin_apply();
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());
