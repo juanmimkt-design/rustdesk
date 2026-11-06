@@ -2494,7 +2494,7 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
 
 /// Lead-In Business: marca, servidor propio y modo cliente (solo recibir conexiones)
 fn leadin_apply() {
-    let tecnico = option_env!("LEADIN_VARIANT") == Some("tecnico");
+    let tecnico = true; // version tecnico (rama leadin-tecnico)
     *config::APP_NAME.write().unwrap() = if tecnico { "Lead-In Tecnico" } else { "Lead-In Soporte" }.to_owned();
     {
         let mut o = config::OVERWRITE_SETTINGS.write().unwrap();
