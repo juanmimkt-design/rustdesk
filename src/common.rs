@@ -2502,11 +2502,19 @@ fn leadin_apply() {
         o.insert("relay-server".to_owned(), "soporte.leadinbusiness.es".to_owned());
         o.insert("key".to_owned(), "DfrlU71Iw8KfXAbo11woJVTeVaQHFS31JX9Y14cpCfI=".to_owned());
     }
-    if !tecnico {
+    {
+        // sin instalacion (ni cuadro de "Instalar") en las dos versiones
         let mut h = config::HARD_SETTINGS.write().unwrap();
-        h.insert("conn-type".to_owned(), "incoming".to_owned());
         h.insert("disable-installation".to_owned(), "Y".to_owned());
+        if !tecnico {
+            h.insert("conn-type".to_owned(), "incoming".to_owned());
+        }
     }
+    // la pantalla remota se ajusta a la ventana (sin desplazarse al mover el raton)
+    config::DEFAULT_DISPLAY_SETTINGS
+        .write()
+        .unwrap()
+        .insert("view_style".to_owned(), "adaptive".to_owned());
 }
 
 pub fn load_custom_client() {
